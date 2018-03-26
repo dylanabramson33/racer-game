@@ -32,23 +32,24 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     let playerCat:UInt32 = 0x1 << 1
     
     
-    
+     //*NEED TO INITALIZE SLOW ENEMY*
     enum Enemy{
         case fast
     
     }
     
+    //Load the track array
     func loadTracks(){
         for i in 0 ... 2{
             if let track = self.childNode(withName: "\(i)") as? SKSpriteNode {
                 tracksArray?.append(track)
             }
         }
-        scorelbl = self.childNode(withName: "score") as? SKLabelNode
-        failLabel = self.childNode(withName: "gameover") as? SKLabelNode
-        playAgain = self.childNode(withName: "playagain") as? SKLabelNode
+      
     }
     
+    
+    //Checks if a move is valid before switching player to track
     func switchTracks(_ right: Bool){
         if(!gameover) {
           
@@ -132,16 +133,12 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
     }
     
     override func didMove(to view: SKView) {
+        
         if let musicURL = Bundle.main.url(forResource: "mainTheme", withExtension: "wav"){
             backGroundMusic = SKAudioNode(url: musicURL)
             addChild(backGroundMusic)
         }
-        self.physicsWorld.contactDelegate = self
-        loadTracks()
-        createPlayer()
-        spawnEnemies()
-        failLabel?.isHidden = true
-        playAgain?.isHidden = true
+   
         if let numberOfTracks = tracksArray?.count{
             for _ in 0 ... numberOfTracks{
                 let randomNumberForVelocity = GKRandomSource.sharedRandom().nextInt(upperBound: 3)
@@ -150,7 +147,15 @@ class GameScene: SKScene, SKPhysicsContactDelegate {
             }
             
         }
-        
+         scorelbl = self.childNode(withName: "score") as? SKLabelNode
+        failLabel = self.childNode(withName: "gameover") as? SKLabelNode
+        playAgain = self.childNode(withName: "playagain") as? SKLabelNode
+        self.physicsWorld.contactDelegate = self
+        loadTracks()
+        createPlayer()
+        spawnEnemies()
+        failLabel?.isHidden = true
+        playAgain?.isHidden = true
     }
 
     func didBegin(_ contact: SKPhysicsContact){
